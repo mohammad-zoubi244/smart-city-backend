@@ -1,0 +1,11 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/smartcitydb
+    username: postgres
+    password: 123!@#aa
+#logging:
+#  level:
+#    root: DEBUG
+#    com.mzoubi.smartcity: DEBUG

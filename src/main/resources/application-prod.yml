@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: [SET_DATASOURCE_URL]
+    username: [SET_USERNAME]
+    password: [SET_PASSWORD]
+logging:
+  level:
+    root: WARN
