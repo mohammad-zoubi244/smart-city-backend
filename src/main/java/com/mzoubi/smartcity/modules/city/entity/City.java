@@ -2,17 +2,19 @@ package com.mzoubi.smartcity.modules.city.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="cities")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
+@Table(name="cities")
 public class City {
 
     @Id
@@ -34,12 +36,11 @@ public class City {
     @Column
     private String timezone;
 
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
-
     @Column(name = "created_at")
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 }

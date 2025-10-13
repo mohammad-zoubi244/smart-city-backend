@@ -44,6 +44,7 @@ public class CityServiceImpl implements CityService {
     public CityDto addCity(CityDto cityDto) {
         log.debug("Add new city");
         City city = cityMapper.toEntity(cityDto);
+
         City saved = cityRepository.save(city);
         return cityMapper.toDto(saved);
     }

@@ -11,6 +11,5 @@ public interface CityMapper {
     CityDto toDto(City city);
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "isDeleted", ignore = true)
     City toEntity(CityDto dto);
 }
