@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: Smart City API
   profiles:
     active: dev
   datasource:

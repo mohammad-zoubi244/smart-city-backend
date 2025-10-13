@@ -1,0 +1,8 @@
+==========================================================
+   🚀 Smart City Dashboard API
+   ---------------------------------------
+   Application Name : ${spring.application.name}
+   Active Profile   : ${spring.profiles.active}
+   Server Port      : ${server.port}
+   Java Version     : ${java.version}
+==========================================================
