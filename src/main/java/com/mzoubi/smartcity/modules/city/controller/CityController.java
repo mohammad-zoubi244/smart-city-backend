@@ -35,20 +35,20 @@ public class CityController {
     public ResponseEntity<ApiResponse<CityDto>> createCity(@RequestBody CityDto dto) {
         CityDto created = cityService.addCity(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success( "City created successfully", created, HttpStatus.OK));
+                .body(ApiResponse.success( "City created successfully", created, HttpStatus.CREATED));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<CityDto>>  updateCity(@PathVariable Long id, @RequestBody CityDto dto) {
         CityDto created = cityService.updateCity(id, dto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("City updated successfully", created, HttpStatus.OK));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteCity(@PathVariable Long id) {
         cityService.deleteCity(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .body(ApiResponse.success("City updated successfully",null, HttpStatus.OK));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success("City deleted successfully",null, HttpStatus.OK));
     }
 }

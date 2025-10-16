@@ -86,7 +86,7 @@ public class CityServiceImplTest {
     @Test
     @DisplayName("addCity_ShouldSaveAndReturnCityDto")
     void addCity_ShouldSaveAndReturnCityDto() {
-        when(cityMapper.toEntity(cityDto)).thenReturn(city);
+        when(cityMapper.toNewEntity(cityDto)).thenReturn(city);
         when(cityRepository.save(any(City.class))).thenReturn(city);
         when(cityMapper.toDto(city)).thenReturn(cityDto);
 

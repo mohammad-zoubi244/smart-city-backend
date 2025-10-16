@@ -1,5 +1,6 @@
-package com.mzoubi.smartcity.modules.city.entity;
+package com.mzoubi.smartcity.modules.weather.entity;
 
+import com.mzoubi.smartcity.modules.city.entity.City;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,27 +13,27 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name="cities")
-public class City {
+@Table(name="weather")
+public class Weather {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,unique = true)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
 
-    @Column(nullable = false)
-    private String country;
+    private Double temperature;
 
-    @Column(nullable = false)
-    private Double latitude;
+    private Double humidity;
 
-    @Column(nullable = false)
-    private Double longitude;
+    @Column(name = "wind_speed")
+    private Double windSpeed;
 
-    @Column
-    private String timezone;
+    private String condition;
+
+    private LocalDateTime timestamp;
 
     @CreationTimestamp
     @Column(name = "created_at")

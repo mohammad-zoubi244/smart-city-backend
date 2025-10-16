@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +23,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<CityDto> getAllCities() {
         log.debug("Get all cities");
+
         return cityRepository.findAll()
                 .stream()
                 .map(cityMapper::toDto)
@@ -33,6 +33,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDto getCityById(Long id) {
         log.debug("Get city with id: {}",id);
+
        City city = cityRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("City not found with id: " + id));
 
@@ -43,9 +44,10 @@ public class CityServiceImpl implements CityService {
     @Transactional
     public CityDto addCity(CityDto cityDto) {
         log.debug("Add new city");
-        City city = cityMapper.toEntity(cityDto);
 
+        City city = cityMapper.toNewEntity(cityDto);
         City saved = cityRepository.save(city);
+
         return cityMapper.toDto(saved);
     }
 
@@ -53,6 +55,7 @@ public class CityServiceImpl implements CityService {
     @Transactional
     public CityDto updateCity(Long id, CityDto cityDto) {
         log.debug("Update city with id: {}",id);
+
         City existing = cityRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("City not found with id: " + id));
 
@@ -70,9 +73,11 @@ public class CityServiceImpl implements CityService {
     @Transactional
     public void deleteCity(Long id) {
         log.debug("Delete city with id: {}",id);
+
         if (!cityRepository.existsById(id)) {
             throw new ResourceNotFoundException("City not found with id: " + id);
         }
+
         cityRepository.deleteById(id);
     }
 }
