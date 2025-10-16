@@ -21,6 +21,8 @@ public class OpenWeatherClient {
 
     public WeatherDto fetchWeatherForCity(City city) {
         try {
+            log.debug("Fetching weather from openweather for city {}", city.getName());
+
             JsonNode response = webClient.get()
                     .uri(returnOpenWeatherFullWeatherDataUrl(
                             city.getLatitude(),
@@ -50,7 +52,7 @@ public class OpenWeatherClient {
         }
     }
 
-    private String returnOpenWeatherFullWeatherDataUrl(Double lat,Double lon){
+    private String returnOpenWeatherFullWeatherDataUrl(Double lat, Double lon) {
         return String.format("%s%s?lat=%f&lon=%f&appid=%s&units=metric",
                 openWeatherProperties.baseUrl(),
                 openWeatherProperties.weatherPath(),
