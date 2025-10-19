@@ -10,10 +10,10 @@ import com.mzoubi.smartcity.modules.weather.mapper.WeatherMapper;
 import com.mzoubi.smartcity.modules.weather.repository.WeatherRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,10 +26,10 @@ public class WeatherServiceImpl implements WeatherService {
     private final OpenWeatherClient openWeatherClient;
 
     @Override
-    public List<WeatherDto> getAllWeather() {
+    public Page<WeatherDto> getAllWeather(PageRequest pageRequest) {
         log.debug("Get all weather");
 
-        return weatherRepository.findAll().stream().map(weatherMapper::toDto).toList();
+        return weatherRepository.findAll(pageRequest).map(weatherMapper::toDto);
     }
 
     @Override
@@ -43,12 +43,11 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public List<WeatherDto> getWeatherByCityId(Long cityId) {
+    public Page<WeatherDto> getWeatherByCityId(Long cityId, PageRequest pageRequest) {
         log.debug("Get weather by city id");
 
-        return weatherRepository.findByCityId(cityId).stream()
-                .map(weatherMapper::toDto)
-                .toList();
+        return weatherRepository.findByCityId(cityId, pageRequest)
+                .map(weatherMapper::toDto);
     }
 
     @Override

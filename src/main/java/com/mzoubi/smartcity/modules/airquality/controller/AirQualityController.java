@@ -1,25 +1,35 @@
 package com.mzoubi.smartcity.modules.airquality.controller;
 
 import com.mzoubi.smartcity.common.ApiResponse;
+import com.mzoubi.smartcity.common.utils.PaginationUtils;
 import com.mzoubi.smartcity.modules.airquality.dto.AirQualityDto;
 import com.mzoubi.smartcity.modules.airquality.service.AirQualityService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/air-quality")
 @RequiredArgsConstructor
 public class AirQualityController {
 
+    private static final Set<String> ALLOWED_FIELDS = Set.of("id");
+
     private final AirQualityService airQualityService;
 
     @GetMapping()
-    public ResponseEntity<ApiResponse<List<AirQualityDto>>> getAllAirQuality() {
-        List<AirQualityDto> airQualityDtoList = airQualityService.getAllAirQuality();
+    public ResponseEntity<ApiResponse<Page<AirQualityDto>>> getAllAirQuality(
+            @RequestParam(value = "page-size", required = false) final Integer pageSize,
+            @RequestParam(value = "page-number", required = false) final Integer pageNumber,
+            @RequestParam(value = "sort-by", required = false) String sortBy,
+            @RequestParam(value = "sort-direction", required = false) String sortDirection) {
+        PageRequest pageRequest = PaginationUtils.createPageRequest(pageNumber, pageSize, sortBy, sortDirection, ALLOWED_FIELDS);
+        Page<AirQualityDto> airQualityDtoList = airQualityService.getAllAirQuality(pageRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("Get all air quality.", airQualityDtoList, HttpStatus.OK));
     }
@@ -33,9 +43,14 @@ public class AirQualityController {
     }
 
     @GetMapping("/city/{cityId}")
-    public ResponseEntity<ApiResponse<List<AirQualityDto>>> getAirQualityByCityId(
-            @PathVariable Long cityId) {
-        List<AirQualityDto> airQualityDtoList = airQualityService.getAirQualityByCityId(cityId);
+    public ResponseEntity<ApiResponse<Page<AirQualityDto>>> getAirQualityByCityId(
+            @PathVariable Long cityId,
+            @RequestParam(value = "page-size", required = false) final Integer pageSize,
+            @RequestParam(value = "page-number", required = false) final Integer pageNumber,
+            @RequestParam(value = "sort-by", required = false) String sortBy,
+            @RequestParam(value = "sort-direction", required = false) String sortDirection) {
+        PageRequest pageRequest = PaginationUtils.createPageRequest(pageNumber, pageSize, sortBy, sortDirection, ALLOWED_FIELDS);
+        Page<AirQualityDto> airQualityDtoList = airQualityService.getAirQualityByCityId(cityId,pageRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("Get air quality for the city: " + cityId, airQualityDtoList, HttpStatus.OK));
     }

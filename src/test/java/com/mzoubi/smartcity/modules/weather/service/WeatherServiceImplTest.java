@@ -16,6 +16,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.mzoubi.smartcity.common.exceptions.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -78,22 +83,24 @@ public class WeatherServiceImplTest {
     @Test
     @DisplayName("getAllWeather_WhenRecordsExist_ShouldReturnListOfWeather")
     void getAllWeather_WhenRecordsExist_ShouldReturnListOfWeather() {
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by("id"));
         when(weatherRepository.findAll()).thenReturn(List.of(weather));
         when(weatherMapper.toDto(weather)).thenReturn(weatherDto);
 
-        List<WeatherDto> result = weatherService.getAllWeather();
+        Page<WeatherDto> result = weatherService.getAllWeather(pageRequest);
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).cityName()).isEqualTo("Amman");
+        assertThat(result.getContent().getFirst().cityName()).isEqualTo("Amman");
         verify(weatherRepository).findAll();
     }
 
     @Test
     @DisplayName("getAllWeather_WhenNoRecords_ShouldReturnEmptyList")
     void getAllWeather_WhenNoRecords_ShouldReturnEmptyList() {
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by("id"));
         when(weatherRepository.findAll()).thenReturn(List.of());
 
-        List<WeatherDto> result = weatherService.getAllWeather();
+        Page<WeatherDto> result = weatherService.getAllWeather(pageRequest);
 
         assertThat(result).isEmpty();
         verify(weatherRepository).findAll();
@@ -127,25 +134,31 @@ public class WeatherServiceImplTest {
     @Test
     @DisplayName("getWeatherByCityId_WhenWeatherExists_ShouldReturnWeatherList")
     void getWeatherByCityId_WhenWeatherExists_ShouldReturnWeatherList() {
-        when(weatherRepository.findByCityId(1L)).thenReturn(List.of(weather));
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by("id"));
+        Page<Weather> weatherPage = new PageImpl<>(List.of(weather), pageRequest, 1);
+
+        when(weatherRepository.findByCityId(1L,pageRequest)).thenReturn(weatherPage);
         when(weatherMapper.toDto(weather)).thenReturn(weatherDto);
 
-        List<WeatherDto> result = weatherService.getWeatherByCityId(1L);
+        Page<WeatherDto> result = weatherService.getWeatherByCityId(1L,pageRequest);
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).cityName()).isEqualTo("Amman");
-        verify(weatherRepository).findByCityId(1L);
+        assertThat(result.getContent().getFirst().cityName()).isEqualTo("Amman");
+        verify(weatherRepository).findByCityId(1L,pageRequest);
     }
 
     @Test
     @DisplayName("getWeatherByCityId_WhenNoWeatherFound_ShouldReturnEmptyList")
     void getWeatherByCityId_WhenNoWeatherFound_ShouldReturnEmptyList() {
-        when(weatherRepository.findByCityId(1L)).thenReturn(List.of());
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by("id"));
+        Page<Weather> weatherPage = new PageImpl<>(List.of(), pageRequest, 1);
 
-        List<WeatherDto> result = weatherService.getWeatherByCityId(1L);
+        when(weatherRepository.findByCityId(1L,pageRequest)).thenReturn(weatherPage);
+
+        Page<WeatherDto> result = weatherService.getWeatherByCityId(1L,pageRequest);
 
         assertThat(result).isEmpty();
-        verify(weatherRepository).findByCityId(1L);
+        verify(weatherRepository).findByCityId(1L,pageRequest);
     }
 
 

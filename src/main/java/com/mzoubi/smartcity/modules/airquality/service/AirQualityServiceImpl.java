@@ -10,6 +10,8 @@ import com.mzoubi.smartcity.modules.city.repository.CityRepository;
 import com.mzoubi.smartcity.config.OpenWeatherClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +28,9 @@ public class AirQualityServiceImpl implements AirQualityService {
     private final OpenWeatherClient openWeatherClient;
 
     @Override
-    public List<AirQualityDto> getAllAirQuality() {
+    public Page<AirQualityDto> getAllAirQuality(PageRequest pageRequest) {
         log.debug("Get all air quality.");
-        return airQualityRepository.findAll().stream().map(airQualityMapper::toDto).toList();
+        return airQualityRepository.findAll(pageRequest).map(airQualityMapper::toDto);
     }
 
     @Override
@@ -41,9 +43,9 @@ public class AirQualityServiceImpl implements AirQualityService {
     }
 
     @Override
-    public List<AirQualityDto> getAirQualityByCityId(Long cityId) {
+    public Page<AirQualityDto> getAirQualityByCityId(Long cityId,PageRequest pageRequest) {
         log.debug("Get air quality for city: {}", cityId);
-        return airQualityRepository.findAirQualityByCityId(cityId).stream().map(airQualityMapper::toDto).toList();
+        return airQualityRepository.findAirQualityByCityId(cityId,pageRequest).map(airQualityMapper::toDto);
     }
 
     @Override

@@ -1,14 +1,15 @@
 package com.mzoubi.smartcity.modules.airquality.service;
 
 import com.mzoubi.smartcity.modules.airquality.dto.AirQualityDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
-import java.util.List;
 
 public interface AirQualityService {
 
-    List<AirQualityDto> getAllAirQuality();
+    Page<AirQualityDto> getAllAirQuality(PageRequest pageRequest);
     AirQualityDto getAirQualityById(Long id);
-    List<AirQualityDto> getAirQualityByCityId(Long cityId);
+    Page<AirQualityDto> getAirQualityByCityId(Long cityId, PageRequest pageRequest);
     AirQualityDto fetchAndSaveAirQualityForCity(Long cityId);
     void deleteAirQuality(Long id);
 }

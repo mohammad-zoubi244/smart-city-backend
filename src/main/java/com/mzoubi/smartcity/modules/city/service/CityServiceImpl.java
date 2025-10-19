@@ -8,6 +8,8 @@ import com.mzoubi.smartcity.modules.city.repository.CityRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +23,11 @@ public class CityServiceImpl implements CityService {
     private final CityRepository cityRepository;
 
     @Override
-    public List<CityDto> getAllCities() {
+    public Page<CityDto> getAllCities(PageRequest pageRequest) {
         log.debug("Get all cities");
 
-        return cityRepository.findAll()
-                .stream()
-                .map(cityMapper::toDto)
-                .toList();
+        return cityRepository.findAll(pageRequest)
+                .map(cityMapper::toDto);
     }
 
     @Override

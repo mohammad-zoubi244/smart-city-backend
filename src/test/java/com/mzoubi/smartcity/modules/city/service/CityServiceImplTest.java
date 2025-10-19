@@ -13,6 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,13 +55,15 @@ public class CityServiceImplTest {
     @Test
     @DisplayName("getAllCities_ShouldReturnListOfCity_WhenCitiesExist")
     void getAllCities_ShouldReturnListOfCity_WhenCitiesExist() {
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by("id"));
+
         when(cityRepository.findAll()).thenReturn(List.of(city));
         when(cityMapper.toDto(city)).thenReturn(cityDto);
 
-        List<CityDto> result = cityService.getAllCities();
+        Page<CityDto> result = cityService.getAllCities(pageRequest);
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).name()).isEqualTo("Amman");
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().getFirst().name()).isEqualTo("Amman");
         verify(cityRepository, times(1)).findAll();
         verify(cityMapper, times(1)).toDto(city);
     }

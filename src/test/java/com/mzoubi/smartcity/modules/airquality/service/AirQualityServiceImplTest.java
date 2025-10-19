@@ -8,6 +8,7 @@ import com.mzoubi.smartcity.modules.airquality.mapper.AirQualityMapper;
 import com.mzoubi.smartcity.modules.airquality.repository.AirQualityRepository;
 import com.mzoubi.smartcity.modules.city.entity.City;
 import com.mzoubi.smartcity.modules.city.repository.CityRepository;
+import com.mzoubi.smartcity.modules.weather.entity.Weather;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -80,22 +85,24 @@ public class AirQualityServiceImplTest {
     @Test
     @DisplayName("getAllAirQuality_WhenRecordsExist_ShouldReturnListOfAirQuality")
     void getAllAirQuality_WhenRecordsExist_ShouldReturnListOfAirQuality() {
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by("id"));
         when(airQualityRepository.findAll()).thenReturn(List.of(airQuality));
         when(airQualityMapper.toDto(airQuality)).thenReturn(airQualityDto);
 
-        List<AirQualityDto> result = airQualityService.getAllAirQuality();
+        Page<AirQualityDto> result = airQualityService.getAllAirQuality(pageRequest);
 
         assertThat(result).hasSize(1);
-        assertThat(result.getFirst().cityName()).isEqualTo("Amman");
+        assertThat(result.getContent().getFirst().cityName()).isEqualTo("Amman");
         verify(airQualityRepository).findAll();
     }
 
     @Test
     @DisplayName("getAllAirQuality_WhenNoRecords_ShouldReturnEmptyList")
     void getAllAirQuality_WhenNoRecords_ShouldReturnEmptyList() {
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by("id"));
         when(airQualityRepository.findAll()).thenReturn(List.of());
 
-        List<AirQualityDto> result = airQualityService.getAllAirQuality();
+        Page<AirQualityDto> result = airQualityService.getAllAirQuality(pageRequest);
 
         assertThat(result).isEmpty();
         verify(airQualityRepository).findAll();
@@ -128,25 +135,31 @@ public class AirQualityServiceImplTest {
     @Test
     @DisplayName("getAirQualityByCityId_WhenWeatherExists_ShouldReturnAirQualityList")
     void getAirQualityByCityId_WhenWeatherExists_ShouldReturnAirQualityList() {
-        when(airQualityRepository.findAirQualityByCityId(1L)).thenReturn(List.of(airQuality));
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by("id"));
+        Page<AirQuality> airQualityPage = new PageImpl<>(List.of(airQuality), pageRequest, 1);
+
+        when(airQualityRepository.findAirQualityByCityId(1L,pageRequest)).thenReturn(airQualityPage);
         when(airQualityMapper.toDto(airQuality)).thenReturn(airQualityDto);
 
-        List<AirQualityDto> result = airQualityService.getAirQualityByCityId(1L);
+        Page<AirQualityDto> result = airQualityService.getAirQualityByCityId(1L,pageRequest);
 
         assertThat(result).hasSize(1);
-        assertThat(result.getFirst().cityName()).isEqualTo("Amman");
-        verify(airQualityRepository).findAirQualityByCityId(1L);
+        assertThat(result.getContent().getFirst().cityName()).isEqualTo("Amman");
+        verify(airQualityRepository).findAirQualityByCityId(1L,pageRequest);
     }
 
     @Test
     @DisplayName("getAirQualityByCityId_WhenNoAirQualityFound_ShouldReturnEmptyList")
     void getAirQualityByCityId_WhenNoAirQualityFound_ShouldReturnEmptyList() {
-        when(airQualityRepository.findAirQualityByCityId(1L)).thenReturn(List.of());
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by("id"));
+        Page<AirQuality> airQualityPage = new PageImpl<>(List.of(), pageRequest, 1);
 
-        List<AirQualityDto> result = airQualityService.getAirQualityByCityId(1L);
+        when(airQualityRepository.findAirQualityByCityId(1L,pageRequest)).thenReturn(airQualityPage);
+
+        Page<AirQualityDto> result = airQualityService.getAirQualityByCityId(1L,pageRequest);
 
         assertThat(result).isEmpty();
-        verify(airQualityRepository).findAirQualityByCityId(1L);
+        verify(airQualityRepository).findAirQualityByCityId(1L,pageRequest);
     }
 
     @Test
