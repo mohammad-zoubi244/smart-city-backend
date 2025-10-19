@@ -1,4 +1,4 @@
-package com.mzoubi.smartcity.config;
+package com.mzoubi.smartcity.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record OpenWeatherProperties(
         String baseUrl,
         String weatherPath,
+        String airPollutionPath,
         String apikey
 ) {
 }

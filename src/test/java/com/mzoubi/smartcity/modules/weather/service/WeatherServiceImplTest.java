@@ -2,7 +2,7 @@ package com.mzoubi.smartcity.modules.weather.service;
 
 import com.mzoubi.smartcity.modules.city.entity.City;
 import com.mzoubi.smartcity.modules.city.repository.CityRepository;
-import com.mzoubi.smartcity.modules.weather.client.OpenWeatherClient;
+import com.mzoubi.smartcity.config.OpenWeatherClient;
 import com.mzoubi.smartcity.modules.weather.dto.WeatherDto;
 import com.mzoubi.smartcity.modules.weather.entity.Weather;
 import com.mzoubi.smartcity.modules.weather.mapper.WeatherMapper;
@@ -153,7 +153,7 @@ public class WeatherServiceImplTest {
     @DisplayName("fetchAndSaveWeatherForCity_WhenCityExists_ShouldFetchMapAndSaveWeather")
     void fetchAndSaveWeatherForCity_WhenCityExists_ShouldFetchMapAndSaveWeather() {
         when(cityRepository.findById(1L)).thenReturn(Optional.of(city));
-        when(openWeatherClient.fetchWeatherForCity(city)).thenReturn(weatherDto);
+        when(openWeatherClient.fetchWeatherForACity(city)).thenReturn(weatherDto);
         when(weatherMapper.toNewEntity(weatherDto)).thenReturn(weather);
         when(weatherRepository.save(any(Weather.class))).thenReturn(weather);
         when(weatherMapper.toDto(weather)).thenReturn(weatherDto);
@@ -163,7 +163,7 @@ public class WeatherServiceImplTest {
         assertThat(result).isNotNull();
         assertThat(result.cityName()).isEqualTo("Amman");
         verify(cityRepository).findById(1L);
-        verify(openWeatherClient).fetchWeatherForCity(city);
+        verify(openWeatherClient).fetchWeatherForACity(city);
         verify(weatherRepository).save(any(Weather.class));
     }
 

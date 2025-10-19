@@ -34,14 +34,16 @@ public class WeatherController {
     @PostMapping("/fetch/{cityId}")
     public ResponseEntity<ApiResponse<WeatherDto>> fetchWeatherForCity(@PathVariable Long cityId) {
         WeatherDto fetchedWeather = weatherService.fetchAndSaveWeatherForCity(cityId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.success("Fetched the weather for city: " + cityId, fetchedWeather, HttpStatus.OK));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(String.format("Saved the weather for the city: %d successfully.", cityId),
+                        fetchedWeather, HttpStatus.CREATED));
+
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteWeather(@PathVariable Long id) {
+    @DeleteMapping("/{weatherId}")
+    public ResponseEntity<ApiResponse<Void>> deleteWeatherByWeatherId(@PathVariable Long id) {
         weatherService.deleteWeather(id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.success("Weather deleted successfully",null, HttpStatus.OK));
+                .body(ApiResponse.success("Weather deleted successfully", null, HttpStatus.OK));
     }
 }

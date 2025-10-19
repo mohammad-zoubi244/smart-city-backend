@@ -3,7 +3,7 @@ package com.mzoubi.smartcity.modules.weather.service;
 import com.mzoubi.smartcity.common.exceptions.ResourceNotFoundException;
 import com.mzoubi.smartcity.modules.city.entity.City;
 import com.mzoubi.smartcity.modules.city.repository.CityRepository;
-import com.mzoubi.smartcity.modules.weather.client.OpenWeatherClient;
+import com.mzoubi.smartcity.config.OpenWeatherClient;
 import com.mzoubi.smartcity.modules.weather.dto.WeatherDto;
 import com.mzoubi.smartcity.modules.weather.entity.Weather;
 import com.mzoubi.smartcity.modules.weather.mapper.WeatherMapper;
@@ -59,7 +59,7 @@ public class WeatherServiceImpl implements WeatherService {
         City city = cityRepository.findById(cityId)
                 .orElseThrow(() -> new ResourceNotFoundException("City not found with id: " + cityId));
 
-        WeatherDto weatherDto = openWeatherClient.fetchWeatherForCity(city);
+        WeatherDto weatherDto = openWeatherClient.fetchWeatherForACity(city);
         Weather weather = weatherMapper.toNewEntity(weatherDto);
         weather.setCity(city);
         Weather saved = weatherRepository.save(weather);

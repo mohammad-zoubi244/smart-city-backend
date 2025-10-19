@@ -1,8 +1,14 @@
 spring:
   datasource:
-    url: [SET_DATASOURCE_URL]
-    username: [SET_USERNAME]
-    password: [SET_PASSWORD]
+    url: [ SET_DATASOURCE_URL ]
+    username: [ SET_USERNAME ]
+    password: [ SET_PASSWORD ]
+api:
+  openweathermap:
+    base-url: [ SET_BASE_URL ]
+    weather-path: [ SET_WEATHER_PATH ]
+    air-pollution-path: [ SET_AIR_POLLUTION_PATH ]
+    api-key: [ SET_API_KEY ]
 logging:
   level:
     root: WARN
