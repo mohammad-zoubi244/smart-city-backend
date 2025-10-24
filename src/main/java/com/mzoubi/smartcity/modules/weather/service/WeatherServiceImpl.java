@@ -1,6 +1,7 @@
 package com.mzoubi.smartcity.modules.weather.service;
 
 import com.mzoubi.smartcity.common.exceptions.ResourceNotFoundException;
+import com.mzoubi.smartcity.modules.alert.service.AlertService;
 import com.mzoubi.smartcity.modules.city.entity.City;
 import com.mzoubi.smartcity.modules.city.repository.CityRepository;
 import com.mzoubi.smartcity.config.OpenWeatherClient;
@@ -24,6 +25,7 @@ public class WeatherServiceImpl implements WeatherService {
     private final WeatherRepository weatherRepository;
     private final CityRepository cityRepository;
     private final OpenWeatherClient openWeatherClient;
+    private final AlertService alertService;
 
     @Override
     public Page<WeatherDto> getAllWeather(PageRequest pageRequest) {
@@ -62,6 +64,8 @@ public class WeatherServiceImpl implements WeatherService {
         Weather weather = weatherMapper.toNewEntity(weatherDto);
         weather.setCity(city);
         Weather saved = weatherRepository.save(weather);
+
+        alertService.evaluateAndCreatedAlerts(city, saved, null);
 
         return weatherMapper.toDto(saved);
     }

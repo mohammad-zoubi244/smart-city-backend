@@ -5,6 +5,7 @@ import com.mzoubi.smartcity.modules.airquality.dto.AirQualityDto;
 import com.mzoubi.smartcity.modules.airquality.entity.AirQuality;
 import com.mzoubi.smartcity.modules.airquality.mapper.AirQualityMapper;
 import com.mzoubi.smartcity.modules.airquality.repository.AirQualityRepository;
+import com.mzoubi.smartcity.modules.alert.service.AlertService;
 import com.mzoubi.smartcity.modules.city.entity.City;
 import com.mzoubi.smartcity.modules.city.repository.CityRepository;
 import com.mzoubi.smartcity.config.OpenWeatherClient;
@@ -26,6 +27,7 @@ public class AirQualityServiceImpl implements AirQualityService {
     private final CityRepository cityRepository;
     private final AirQualityMapper airQualityMapper;
     private final OpenWeatherClient openWeatherClient;
+    private final AlertService alertService;
 
     @Override
     public Page<AirQualityDto> getAllAirQuality(PageRequest pageRequest) {
@@ -61,6 +63,8 @@ public class AirQualityServiceImpl implements AirQualityService {
         airQuality.setCity(city);
 
         AirQuality saved = airQualityRepository.save(airQuality);
+
+        alertService.evaluateAndCreatedAlerts(city, null, saved);
 
         return airQualityMapper.toDto(saved);
     }
