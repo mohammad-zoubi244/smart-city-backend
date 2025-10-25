@@ -1,4 +1,4 @@
-package com.mzoubi.smartcity.common;
+package com.mzoubi.smartcity.common.dto;
 
 import org.springframework.http.HttpStatus;
 
